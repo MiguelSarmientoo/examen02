@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lista de Préstamos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-dark bg-dark justify-content-between">
+        <a class="navbar-brand" href="{% url 'inicio' %}">Biblioteca Tecsup</a>
+        <div class="d-flex">
+            <a href="{% url 'agregar_prestamo' %}" class="nav-link text-light">Nuevo Préstamo</a>
+            <a href="{% url 'inicio' %}" class="nav-link text-light">Inicio</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4 flex-grow-1">
+        <h1 class="mb-4">Lista de Préstamos</h1>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Libro</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Fecha de Inicio</th>
+                        <th scope="col">Fecha de Devolución</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prestamo in prestamos %}
+                    <tr>
+                        <td>{{ prestamo.id_prestamo }}</td>
+                        <td>{{ prestamo.libro.titulo }}</td>
+                        <td>{{ prestamo.autor.nombre }}</td>
+                        <td>{{ prestamo.usuario.nombre }}</td>
+                        <td>{{ prestamo.fecha_prestamo }}</td>
+                        <td>
+                            {% if prestamo.finalizado %}
+                                {{ prestamo.fecha_devolucion }}
+                            {% else %}
+                                {{ prestamo.fecha_devolucion|default:"Pendiente" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not prestamo.finalizado %}
+                                <a href="{% url 'finalizar_prestamo' id_prestamo=prestamo.id_prestamo %}" class="btn btn-success btn-sm">Finalizar</a>
+                                <a href="{% url 'editar_prestamo' id_prestamo=prestamo.id_prestamo %}" class="btn btn-primary btn-sm">Editar</a>
+                                <a href="{% url 'ver_prestamo' id_prestamo=prestamo.id_prestamo %}" class="btn btn-info btn-sm">Detalles</a>
+                                <a href="{% url 'eliminar_prestamo' id_prestamo=prestamo.id_prestamo %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3">
+        © 2023 Biblioteca Tecsup
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
